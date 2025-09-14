@@ -22,7 +22,7 @@ export const Client = ({ user }: ClientProps) => {
   const [aitStyle, setAIStyle] = useState<string | null>(null);
   const [prompt, setPrompt] = useState<string>("");
   const [isSaving, setIsSaving] = useState<boolean>(false);
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+ const [uploadedImage, setUploadedImage] = useState<{ url: string; publicId: string } | null>(null);
   const [outputImage, setOutputImage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -41,10 +41,11 @@ export const Client = ({ user }: ClientProps) => {
   const clearAllFilters = () => {};
   const saveTheResults = () => {};
   const handleGenerate = () => {};
-  const handleImageUpload = (url:string) => {
-    setUploadedImage(url);
-  };
-  const handleImageRemove = () => {
+  const handleImageUpload = (url: string, publicId: string) => {
+  setUploadedImage({ url, publicId });
+};
+
+  const handleImageRemove = (publicId: string) => {
     setUploadedImage(null);
   };
 
