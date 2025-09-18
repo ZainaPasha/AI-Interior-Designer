@@ -24,7 +24,7 @@ export const POST = async (req: NextRequest) => {
 
             }
         })
-        return NextResponse.json(savedResult, { status: 201 });
+return NextResponse.json({ success: true, result: savedResult }, { status: 201 });
     } catch (error) {
         console.error("Save API error:", error);
         return NextResponse.json({ error: "Failed to save result" }, { status: 500 });

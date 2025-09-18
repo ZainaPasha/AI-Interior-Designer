@@ -118,21 +118,50 @@ export const Client = ({ user }: ClientProps) => {
   };
 
 
-  const handleGenerate = async() => {
-    if (!uploadedImage) return;
-    try {
-      setLoading(true);
-      const result = await generateFromHuggingFaceModel({
+  // const handleGenerate = async() => {
+  //   if (!uploadedImage) return;
+  //   try {
+  //     setLoading(true);
+  //     const result = await generateFromHuggingFaceModel({
+  //       imageUrl: uploadedImage.url,
+  //       prompt: `${prompt} ${room? `Room Style: ${room}`:""} ${aitStyle? `AI Style: ${aitStyle}`:""}. Make sure the image is high quality(1800p) and make sure the ratio is 16:9 and visually appealing.`,
+  //     })
+  //     setOutputImage(result);
+  //   } catch (error) {
+  //     toast.error("Failed to generate room design. Please try again.");
+  //   } finally{
+  //     setLoading(false);
+  //   }
+  // };
+
+const handleGenerate = async () => {
+  if (!uploadedImage) return;
+  setLoading(true);
+
+  try {
+    const res = await fetch("/api/generate", {
+      method: "POST",
+      body: JSON.stringify({
         imageUrl: uploadedImage.url,
-        prompt: `${prompt} ${room? `Room Style: ${room}`:""} ${aitStyle? `AI Style: ${aitStyle}`:""}. Make sure the image is high quality(1800p) and make sure the ratio is 16:9 and visually appealing.`,
-      })
-      setOutputImage(result);
-    } catch (error) {
-      toast.error("Failed to generate room design. Please try again.");
-    } finally{
-      setLoading(false);
+        prompt: `${prompt} ${room ? `Room Style: ${room}` : ""} ${aitStyle ? `AI Style: ${aitStyle}` : ""}`,
+      }),
+      headers: { "Content-Type": "application/json" },
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      setOutputImage(data.outputImage); // ✅ permanent Cloudinary URL
+    } else {
+      toast.error("Generation failed");
     }
-  };
+  } catch (err) {
+    toast.error("Something went wrong");
+  } finally {
+    setLoading(false);
+  }
+};
+
+
   const handleImageUpload = (url: string, publicId: string) => {
     setUploadedImage({ url, publicId });
   };
