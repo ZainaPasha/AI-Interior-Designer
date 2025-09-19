@@ -2,12 +2,12 @@ import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
-export const PATCH = async (
+export async function PATCH(
   req: NextRequest,
- context: { params?: { id?: string } }
-) => {
+  { params }: { params: { id: string } }
+) {
   try {
-    const id = context.params?.id;
+    const id = params.id;
     const { userId } = await auth();
 
     if (!userId) {
@@ -29,19 +29,19 @@ export const PATCH = async (
     const isAlreadyFavorite = existingDesign.favourites.includes(userId);
 
     const updateFavorites = isAlreadyFavorite
-      ? existingDesign.favourites.filter((id) => id !== userId)
+      ? existingDesign.favourites.filter((uid) => uid !== userId)
       : [...existingDesign.favourites, userId];
 
     const updatedRoom = await db.generateRoom.update({
-        where:{id},
-        data: {favourites:updateFavorites}
-    })
+      where: { id },
+      data: { favourites: updateFavorites },
+    });
 
     return NextResponse.json({
-        success:true,
-        isFavorite: !isAlreadyFavorite,
-        favourites: updatedRoom.favourites
-    })
+      success: true,
+      isFavorite: !isAlreadyFavorite,
+      favourites: updatedRoom.favourites,
+    });
   } catch (error) {
     console.error("Update the API error:", error);
     return NextResponse.json(
@@ -49,4 +49,4 @@ export const PATCH = async (
       { status: 500 }
     );
   }
-};
+}
