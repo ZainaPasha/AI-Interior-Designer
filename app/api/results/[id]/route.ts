@@ -4,10 +4,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
-): Promise<NextResponse> {
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    const id = params.id;
+    const { id } = await params; // ✅ properly destructure `id` from awaited params
     const { userId } = await auth();
 
     if (!userId) {
