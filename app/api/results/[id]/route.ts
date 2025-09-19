@@ -7,7 +7,7 @@ export const PATCH = async (
   { params }: { params: { id: string } }
 ) => {
   try {
-    const { id } = await params;
+    const { id } = params;
     const { userId } = await auth();
 
     if (!userId) {
