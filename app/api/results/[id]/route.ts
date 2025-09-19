@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function PATCH(
   req: NextRequest,
   { params }: { params: { id: string } }
-) {
+): Promise<NextResponse> {
   try {
     const id = params.id;
     const { userId } = await auth();
