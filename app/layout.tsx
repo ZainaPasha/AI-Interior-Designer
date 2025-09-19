@@ -4,6 +4,7 @@ import "./globals.css";
 import Providers from "./providers";
 import Header from "@/components/header";
 import { auth } from "@clerk/nextjs/server";
+import {Footer} from "@/components/sections/footer"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,8 +34,10 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}
       >
         <Providers>
+          
           <Header isAuthenticated = {isAuthenticated}/>
           {children}
+           <Footer/>
         </Providers>
       </body>
     </html>

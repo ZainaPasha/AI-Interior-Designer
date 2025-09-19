@@ -1,25 +1,17 @@
-
 "use client";
 
 import React, { useRef } from "react";
 import { Container } from "@/components/container";
 import { GenerateButton } from "@/components/generate-button";
 import Link from "next/link";
-import starsBg from "@/assets/img/stars.png";
-
-import {
-  motion,
-  useMotionValueEvent,
-  useScroll,
-  useTransform,
-} from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 interface HeroProps {
   isAuthenticated: boolean;
   userId: string | null;
 }
 
-export const Hero = ({ isAuthenticated, userId }: HeroProps) => {
+export const Hero = ({ isAuthenticated }: HeroProps) => {
   const sectionRef = useRef(null);
 
   const { scrollYProgress } = useScroll({
@@ -27,72 +19,100 @@ export const Hero = ({ isAuthenticated, userId }: HeroProps) => {
     offset: ["start end", "end start"],
   });
 
-  // useMotionValueEvent(scrollYProgress, "change", (value) => {
-  //   console.log("scrollYProgress", value);
-  // }); =
-
   const backgroundPositionY = useTransform(
     scrollYProgress,
     [0, 1],
-    [-300, 300]
+    [-150, 150]
   );
 
   return (
     <motion.section
       ref={sectionRef}
-      style={{ backgroundImage: `url(${starsBg.src})`, backgroundPositionY }}
-      animate={{ backgroundPositionX: starsBg.width }}
-      transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-      className="h-[492px] md:h-[800px] flex items-center overflow-hidden relative [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]"
+      className="relative h-[492px] md:h-[800px] flex items-center overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)] bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e]"
     >
-      {/* absolute circle layers */}
-      <div className="absolute inset-0 bg-[radial-gradient(75%_75%_at_center_center,rgba(140,69,255,.5)_15%,rgb(14,0,36,.5)_78%,transparent)]"></div>
-      {/* start planet */}
-      <div className="absolute h-64 w-64 md:h-96 md:w-96 bg-purple-500 rounded-full border border-white/30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(50%_50%_at_16.8%_18.3%,white,rgb(184,148,255)_37.7%,rgb(24,0,66))] shadow-[-20px_-20px_50px_rgba(255,255,255,.5),-20px_-20px_80px_rgba(255,255,255,.1),0_0_50pc_rgb(140,69,255)]"></div>
-      {/* end planet */}
+      {/* ===== Glass Ripple Filter ===== */}
+      <svg className="absolute inset-0 w-full h-full pointer-events-none">
+        <filter id="rippleFilter">
+          <feTurbulence
+            type="turbulence"
+            baseFrequency="0.01 0.02"
+            numOctaves="3"
+            result="turb"
+          >
+            <animate
+              attributeName="baseFrequency"
+              dur="20s"
+              values="0.01 0.02;0.02 0.01;0.01 0.02"
+              repeatCount="indefinite"
+            />
+          </feTurbulence>
+          <feDisplacementMap in="SourceGraphic" scale="30" />
+        </filter>
+      </svg>
 
-      {/* ring 1 */}
+      {/* ===== Background Layer with Ripple ===== */}
       <motion.div
-        animate={{ rotate: "1turn" }}
-        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-        className="absolute h-[344px] w-[344px] min-md:w-[580px] min-md:h-[580px] border border-white opacity-20 rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 "
+        style={{
+          filter: "url(#rippleFilter)",
+          backgroundPositionY,
+        }}
+        className="absolute inset-0"
       >
-        <div className="absolute h-2 w-2 left-0 bg-white rounded-full top-1/2 -translate-x-1/2 -translate-y-1/2 "></div>
-        <div className="absolute h-2 w-2 left-1/2 bg-white rounded-full top-0 -translate-x-1/2 -translate-y-1/2 "></div>
-        <div className="absolute h-5 w-5 left-full border border-white rounded-full top-1/2 -translate-x-1/2 -translate-y-1/2  inline-flex items-center justify-center">
-          <div className="h-2 w-2 bg-white rounded-full"></div>
-        </div>
+        {/* animated gradient blobs */}
+        <motion.div
+          animate={{
+            x: [0, 50, -30, 0],
+            y: [0, -40, 30, 0],
+            scale: [1, 1.2, 0.8, 1],
+          }}
+          transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute h-[500px] w-[500px] bg-purple-500/30 rounded-full blur-3xl top-1/4 left-1/4"
+        />
+        <motion.div
+          animate={{
+            x: [0, -40, 20, 0],
+            y: [0, 30, -20, 0],
+            scale: [1, 1.1, 0.9, 1],
+          }}
+          transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute h-[600px] w-[600px] bg-pink-500/20 rounded-full blur-3xl bottom-1/4 right-1/4"
+        />
       </motion.div>
 
-      {/* ring 2 */}
-      <motion.div
-        animate={{ rotate: "-1turn" }}
-        transition={{ repeat: Infinity, duration: 60, ease: "linear" }}
-        className="absolute h-[444px] w-[444px] min-md:h-[780px] min-md:w-[780px] rounded-full border border-white/20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-dashed"
-      ></motion.div>
-      {/* ring 3 */}
-      <motion.div
-        animate={{ rotate: "1turn" }}
-        transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
-        className="absolute h-[544px] w-[544px] min-md:w-[980px] min-md:h-[980px] rounded-full border border-white opacity-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-      >
-        <div className="absolute h-2 w-2 left-0 bg-white rounded-full top-1/2 -translate-x-1/2 -translate-y-1/2 "></div>
-        <div className="absolute h-2 w-2 left-full bg-white rounded-full top-1/2 -translate-x-1/2 -translate-y-1/2 "></div>
-      </motion.div>
-      {/* create this first */}
-      <Container className="relative mt-16">
-        <h1 className="text-7xl md:text-[128px] details-content:leading-none capitalize font-semibold tracking-tighter bg-white bg-[radial-gradient(100%_100%_at_top_left,white,white,rgba(74,32,138,.5))] text-transparent bg-clip-text text-center">
-          AI Planner
-        </h1>
-        <p className="text-lg min-md:text-xl max-w-xl mx-auto text-white/70 mt-5 text-center">
-          Elevate your room's visibility effortlessly with AI, where smart
-          technology meets intuitive design.
-        </p>
-        <div className="flex justify-center mt-5">
+      {/* ===== Content ===== */}
+      <Container className="relative mt-1 z-10">
+        {/* Main Heading */}
+        <motion.h1
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="text-5xl md:text-7xl lg:text-[96px] font-bold tracking-tight text-center bg-clip-text text-transparent bg-gradient-to-r from-white via-purple-300 to-white leading-[1.4]"
+        >
+          AI Interior Designer
+        </motion.h1>
+
+        {/* Tagline */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 1, ease: "easeOut" }}
+          className="text-lg md:text-xl max-w-2xl mx-auto text-white/80 mt-5 text-center"
+        >
+          Upload your room photo, describe your dream style, <br /> and let AI
+          redesign it into a stunning new space.
+        </motion.p>
+
+        {/* CTA Button */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6, duration: 1 }}
+          className="flex justify-center mt-8"
+        >
           <Link href={isAuthenticated ? "/dashboard" : "/sign-in"}>
-            <GenerateButton label="Generate Room" />
+            <GenerateButton label="Redesign my room" />
           </Link>
-        </div>
+        </motion.div>
       </Container>
     </motion.section>
   );

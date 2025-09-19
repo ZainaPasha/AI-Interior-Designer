@@ -23,16 +23,26 @@ export const NavMenu = ({ isMobile }: NavMenuProps) => {
       className={cn("flex gap-8", isMobile && "flex-col items-start gap-12")}
     >
       {filteredRoutes.map((route) => {
-        // use exact match for home route to prevent highlighting other routes
-        // const isActive = pathname.startsWith(route.link);
         const isActive =
           route.link === "/"
             ? pathname === "/"
             : pathname.startsWith(route.link);
+
+        const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+          if (route.link.startsWith("#")) {
+            e.preventDefault();
+            const target = document.querySelector(route.link);
+            if (target) {
+              target.scrollIntoView({ behavior: "smooth" });
+            }
+          }
+        };
+
         return (
           <Link
             key={route.link}
-            href={route.link}
+            href={route.link.startsWith("#") ? "#" : route.link}
+            onClick={handleClick}
             className={cn(
               "text-white/70 hover:text-white transition",
               isActive && "text-white font-semibold"

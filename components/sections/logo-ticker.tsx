@@ -8,22 +8,35 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 
 const logos = [
-  "/assets/img/logo/firebase.png",
-  "/assets/img/logo/googlecloud.png",
+  "/assets/img/logo/nextjs.png",
+  "/assets/img/logo/pytorch.png",
+  "/assets/img/logo/prisma.png",
+  "/assets/img/logo/react.png",
+  "/assets/img/logo/node.png",
+  "/assets/img/logo/neon.png",
+  "/assets/img/logo/cloudinary.png",
+  "/assets/img/logo/nextjs.png",
+   "/assets/img/logo/pytorch.png",
+  "/assets/img/logo/prisma.png",
+  "/assets/img/logo/neon.png",
   "/assets/img/logo/nextjs.png",
   "/assets/img/logo/prisma.png",
   "/assets/img/logo/react.png",
+  "/assets/img/logo/node.png",
   "/assets/img/logo/nextjs.png",
-  "/assets/img/logo/firebase.png",
+  "/assets/img/logo/pytorch.png",
   "/assets/img/logo/prisma.png",
-  "/assets/img/logo/firebase.png",
-  "/assets/img/logo/googlecloud.png",
+  "/assets/img/logo/neon.png",
+  "/assets/img/logo/cloudinary.png",
   "/assets/img/logo/nextjs.png",
+  "/assets/img/logo/pytorch.png",
   "/assets/img/logo/prisma.png",
   "/assets/img/logo/react.png",
+  "/assets/img/logo/node.png",
   "/assets/img/logo/nextjs.png",
-  "/assets/img/logo/firebase.png",
+  "/assets/img/logo/pytorch.png",
   "/assets/img/logo/prisma.png",
+ 
 ];
 
 export const LogoTicker = () => {
@@ -31,9 +44,6 @@ export const LogoTicker = () => {
     <section className="py-20 md:py-24">
       <Container className="p-4 md:p-8">
         <div className="flex items-center gap-5">
-          <div className="flex-1 md:flex-none">
-            <h2>Powered by Innovative Techs</h2>
-          </div>
           <div className="flex-1 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_20%,black_80%,transparent)]">
             <motion.div
               initial={{ translateX: "-50%" }}
