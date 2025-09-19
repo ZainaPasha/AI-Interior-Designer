@@ -2,18 +2,13 @@ import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
-// Type for the dynamic route params
-interface RouteParams {
-  id: string;
-}
-
 export const PATCH = async (
   req: NextRequest,
-  context: { params: RouteParams } // Correctly type context.params
+ context: { params?: { id?: string } }
 ) => {
   try {
-    const { id } = context.params; // Access params directly
-    const { userId } = await auth(); // Await the promise to access userId
+    const id = context.params?.id;
+    const { userId } = await auth();
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -34,21 +29,21 @@ export const PATCH = async (
     const isAlreadyFavorite = existingDesign.favourites.includes(userId);
 
     const updateFavorites = isAlreadyFavorite
-      ? existingDesign.favourites.filter((uid) => uid !== userId)
+      ? existingDesign.favourites.filter((id) => id !== userId)
       : [...existingDesign.favourites, userId];
 
     const updatedRoom = await db.generateRoom.update({
-      where: { id },
-      data: { favourites: updateFavorites },
-    });
+        where:{id},
+        data: {favourites:updateFavorites}
+    })
 
     return NextResponse.json({
-      success: true,
-      isFavorite: !isAlreadyFavorite,
-      favourites: updatedRoom.favourites,
-    });
+        success:true,
+        isFavorite: !isAlreadyFavorite,
+        favourites: updatedRoom.favourites
+    })
   } catch (error) {
-    console.error("Update API error:", error);
+    console.error("Update the API error:", error);
     return NextResponse.json(
       { error: "Failed to update result" },
       { status: 500 }
